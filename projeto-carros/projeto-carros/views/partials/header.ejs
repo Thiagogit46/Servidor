@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoAnúncios 🚗</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<!-- ================================================ -->
+<!-- NAVBAR - aparece em TODAS as páginas              -->
+<!-- ================================================ -->
+<nav class="navbar">
+  <a href="/carros" class="logo">🚗 AutoAnúncios</a>
+
+  <div class="nav-links">
+    <a href="/carros">Ver Carros</a>
+
+    <!-- EJS: Verifica se há um usuário logado na sessão -->
+    <% if (usuario) { %>
+      <!-- Se estiver logado, mostra o nome e opções -->
+      <span class="usuario-info">Olá, <strong><%= usuario.nome %></strong></span>
+
+      <!-- Se for admin, mostra o botão de cadastrar carro -->
+      <% if (usuario.isAdmin) { %>
+        <a href="/carros/novo" class="btn btn-primary">+ Anunciar Carro</a>
+      <% } %>
+
+      <a href="/usuarios/logout" class="btn btn-danger">Sair</a>
+
+    <% } else { %>
+      <!-- Se NÃO estiver logado, mostra Login e Cadastro -->
+      <a href="/usuarios/login">Login</a>
+      <a href="/usuarios/cadastro">Cadastrar</a>
+    <% } %>
+  </div>
+</nav>
+
+<!-- Conteúdo das páginas entra aqui -->
+<main class="container">

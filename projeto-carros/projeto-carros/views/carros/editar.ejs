@@ -1,0 +1,63 @@
+<!-- ================================================ -->
+<!-- VIEW: Editar Carro (UPDATE)                      -->
+<!-- EJS preenche os campos com os dados atuais       -->
+<!-- ================================================ -->
+
+<%- include('../partials/header') %>
+
+<div class="form-container">
+  <h1>✏️ Editar Carro</h1>
+
+  <!-- EJS: Exibe erro se houver -->
+  <% if (erro) { %>
+    <div class="alert alert-erro"><%= erro %></div>
+  <% } %>
+
+  <!-- Formulário envia para POST /carros/editar/:id -->
+  <form action="/carros/editar/<%= carro._id %>" method="POST">
+
+    <div class="form-group">
+      <label>Marca *</label>
+      <!-- EJS: value preenchido com o dado atual do banco -->
+      <input type="text" name="marca" value="<%= carro.marca %>" required>
+    </div>
+
+    <div class="form-group">
+      <label>Modelo *</label>
+      <input type="text" name="modelo" value="<%= carro.modelo %>" required>
+    </div>
+
+    <div class="form-group">
+      <label>Ano *</label>
+      <input type="number" name="ano" value="<%= carro.ano %>" required>
+    </div>
+
+    <div class="form-group">
+      <label>Preço (R$) *</label>
+      <input type="number" name="preco" value="<%= carro.preco %>" required>
+    </div>
+
+    <div class="form-group">
+      <label>Quantidade Disponível *</label>
+      <input type="number" name="qtde_disponivel"
+             value="<%= carro.qtde_disponivel %>" min="0" required>
+      <small>⚠️ Se colocar 0, o status muda automaticamente para "Vendido"</small>
+    </div>
+
+    <!-- Mostra o status atual -->
+    <div class="form-group">
+      <label>Status Atual:</label>
+      <span class="badge <%= carro.status === 'disponivel' ? 'badge-verde' : 'badge-vermelho' %>">
+        <%= carro.status %>
+      </span>
+    </div>
+
+    <div class="form-actions">
+      <a href="/carros" class="btn btn-secundario">Cancelar</a>
+      <button type="submit" class="btn btn-primary">💾 Salvar Alterações</button>
+    </div>
+
+  </form>
+</div>
+
+<%- include('../partials/footer') %>

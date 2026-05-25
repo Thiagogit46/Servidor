@@ -1,0 +1,78 @@
+<!-- ================================================ -->
+<!-- VIEW: Lista de Carros (READ - página dinâmica)   -->
+<!-- EJS renderiza os dados vindos do banco de dados  -->
+<!-- ================================================ -->
+
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <h1>🚗 Carros Disponíveis</h1>
+  <p>Encontre o carro dos seus sonhos</p>
+</div>
+
+<!-- EJS: Verifica se há carros no banco de dados -->
+<% if (carros.length === 0) { %>
+  <!-- Mensagem quando não há carros cadastrados -->
+  <div class="empty-state">
+    <p>😕 Nenhum carro anunciado ainda.</p>
+    <% if (usuario && usuario.isAdmin) { %>
+      <a href="/carros/novo" class="btn btn-primary">Cadastrar primeiro carro</a>
+    <% } %>
+  </div>
+
+<% } else { %>
+
+  <!-- EJS: Loop que renderiza um card para CADA carro do banco -->
+  <div class="grid-carros">
+    <% carros.forEach(carro => { %>
+
+      <!-- Card de cada carro -->
+      <div class="card-carro <%= carro.status === 'vendido' ? 'vendido' : '' %>">
+
+        <!-- Badge de status -->
+        <span class="badge <%= carro.status === 'disponivel' ? 'badge-verde' : 'badge-vermelho' %>">
+          <%= carro.status === 'disponivel' ? '✅ Disponível' : '❌ Vendido' %>
+        </span>
+
+        <!-- EJS: Exibe os dados do carro vindos do banco -->
+        <h2><%= carro.marca %> <%= carro.modelo %></h2>
+        <p class="ano">📅 Ano: <strong><%= carro.ano %></strong></p>
+        <p class="preco">💰 R$ <strong><%= carro.preco.toLocaleString('pt-BR') %></strong></p>
+        <p class="qtde">
+          📦 Disponíveis: <strong><%= carro.qtde_disponivel %></strong>
+        </p>
+
+        <!-- Botões visíveis apenas para ADMINISTRADORES -->
+        <% if (usuario && usuario.isAdmin) { %>
+          <div class="acoes-admin">
+
+            <!-- Botão Editar → vai para a rota GET /carros/editar/:id -->
+            <a href="/carros/editar/<%= carro._id %>" class="btn btn-secundario">
+              ✏️ Editar
+            </a>
+
+            <!-- Botão Vender → diminui a quantidade em 1 (UPDATE) -->
+            <% if (carro.qtde_disponivel > 0) { %>
+              <form action="/carros/vender/<%= carro._id %>" method="POST" style="display:inline">
+                <button type="submit" class="btn btn-primary">🤝 Registrar Venda</button>
+              </form>
+            <% } %>
+
+            <!-- Botão Deletar → remove o carro do banco (DELETE) -->
+            <form action="/carros/deletar/<%= carro._id %>" method="POST"
+                  style="display:inline"
+                  onsubmit="return confirm('Tem certeza que deseja remover este anúncio?')">
+              <button type="submit" class="btn btn-danger">🗑️ Remover</button>
+            </form>
+
+          </div>
+        <% } %>
+
+      </div>
+
+    <% }) %> <!-- Fim do forEach -->
+  </div>
+
+<% } %>
+
+<%- include('../partials/footer') %>
